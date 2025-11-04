@@ -60,6 +60,7 @@ class ArdourState:
 
     Maintains current Ardour state, updated via OSC feedback.
     Provides fast, synchronous access to state information.
+    Integrates with OSC bridge to receive automatic state updates.
     """
 
     def __init__(self) -> None:
@@ -67,6 +68,131 @@ class ArdourState:
         self._lock = threading.RLock()
         self._state = SessionState()
         logger.info("Ardour state cache initialized")
+
+    def register_feedback_handlers(self, osc_bridge: Any) -> None:
+        """
+        Register OSC feedback handlers with the bridge.
+
+        Sets up handlers for all Ardour feedback messages to
+        automatically update the state cache.
+
+        Args:
+            osc_bridge: ArdourOSCBridge instance to register handlers with
+        """
+        # Transport feedback
+        osc_bridge.register_feedback_handler("/transport_frame", self._on_transport_frame)
+        osc_bridge.register_feedback_handler("/transport_speed", self._on_transport_speed)
+        osc_bridge.register_feedback_handler("/record_enabled", self._on_record_enabled)
+        osc_bridge.register_feedback_handler("/tempo", self._on_tempo)
+        osc_bridge.register_feedback_handler("/time_signature", self._on_time_signature)
+        osc_bridge.register_feedback_handler("/loop_toggle", self._on_loop_toggle)
+
+        # Session feedback
+        osc_bridge.register_feedback_handler("/session_name", self._on_session_name)
+        osc_bridge.register_feedback_handler("/sample_rate", self._on_sample_rate)
+        osc_bridge.register_feedback_handler("/dirty", self._on_dirty)
+
+        # Track feedback (strip messages)
+        osc_bridge.register_feedback_handler("/strip/name", self._on_strip_name)
+        osc_bridge.register_feedback_handler("/strip/gain", self._on_strip_gain)
+        osc_bridge.register_feedback_handler("/strip/pan_stereo_position", self._on_strip_pan)
+        osc_bridge.register_feedback_handler("/strip/mute", self._on_strip_mute)
+        osc_bridge.register_feedback_handler("/strip/solo", self._on_strip_solo)
+        osc_bridge.register_feedback_handler("/strip/recenable", self._on_strip_recenable)
+
+        logger.info("Registered OSC feedback handlers for state updates")
+
+    # Feedback handler methods
+    def _on_transport_frame(self, address: str, args: List[Any]) -> None:
+        """Handle transport frame updates."""
+        if args:
+            self.update_transport(frame=args[0])
+
+    def _on_transport_speed(self, address: str, args: List[Any]) -> None:
+        """Handle transport speed updates."""
+        if args:
+            speed = args[0]
+            # Speed: 0.0 = stopped, 1.0 = playing forward
+            self.update_transport(playing=speed > 0.0)
+
+    def _on_record_enabled(self, address: str, args: List[Any]) -> None:
+        """Handle record enable updates."""
+        if args:
+            self.update_transport(recording=bool(args[0]))
+
+    def _on_tempo(self, address: str, args: List[Any]) -> None:
+        """Handle tempo updates."""
+        if args:
+            self.update_transport(tempo=float(args[0]))
+
+    def _on_time_signature(self, address: str, args: List[Any]) -> None:
+        """Handle time signature updates."""
+        if len(args) >= 2:
+            with self._lock:
+                self._state.transport.time_signature = (int(args[0]), int(args[1]))
+                logger.debug(f"Time signature updated: {args[0]}/{args[1]}")
+
+    def _on_loop_toggle(self, address: str, args: List[Any]) -> None:
+        """Handle loop toggle updates."""
+        if args:
+            with self._lock:
+                self._state.transport.loop_enabled = bool(args[0])
+
+    def _on_session_name(self, address: str, args: List[Any]) -> None:
+        """Handle session name updates."""
+        if args:
+            with self._lock:
+                self._state.name = str(args[0])
+                logger.debug(f"Session name: {args[0]}")
+
+    def _on_sample_rate(self, address: str, args: List[Any]) -> None:
+        """Handle sample rate updates."""
+        if args:
+            with self._lock:
+                self._state.sample_rate = int(args[0])
+                logger.debug(f"Sample rate: {args[0]}")
+
+    def _on_dirty(self, address: str, args: List[Any]) -> None:
+        """Handle session dirty flag updates."""
+        if args:
+            with self._lock:
+                self._state.dirty = bool(args[0])
+
+    def _on_strip_name(self, address: str, args: List[Any]) -> None:
+        """Handle track name updates."""
+        if len(args) >= 2:
+            strip_id, name = int(args[0]), str(args[1])
+            self.update_track(strip_id, name=name)
+
+    def _on_strip_gain(self, address: str, args: List[Any]) -> None:
+        """Handle track gain updates."""
+        if len(args) >= 2:
+            strip_id, gain = int(args[0]), float(args[1])
+            self.update_track(strip_id, gain_db=gain)
+
+    def _on_strip_pan(self, address: str, args: List[Any]) -> None:
+        """Handle track pan updates."""
+        if len(args) >= 2:
+            strip_id, pan = int(args[0]), float(args[1])
+            self.update_track(strip_id, pan=pan)
+
+    def _on_strip_mute(self, address: str, args: List[Any]) -> None:
+        """Handle track mute updates."""
+        if len(args) >= 2:
+            strip_id, muted = int(args[0]), bool(args[1])
+            self.update_track(strip_id, muted=muted)
+
+    def _on_strip_solo(self, address: str, args: List[Any]) -> None:
+        """Handle track solo updates."""
+        if len(args) >= 2:
+            strip_id, soloed = int(args[0]), bool(args[1])
+            self.update_track(strip_id, soloed=soloed)
+
+    def _on_strip_recenable(self, address: str, args: List[Any]) -> None:
+        """Handle track record enable updates."""
+        if len(args) >= 2:
+            strip_id, rec_enabled = int(args[0]), bool(args[1])
+            self.update_track(strip_id, rec_enabled=rec_enabled)
 
     def update_transport(
         self,
