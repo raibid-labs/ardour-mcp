@@ -1,7 +1,7 @@
 # Ardour MCP 🎵
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Server-green.svg)](https://modelcontextprotocol.io/)
 
 **Model Context Protocol server for Ardour DAW - Control Ardour through AI assistants**
@@ -42,7 +42,7 @@ See [ROADMAP.md](docs/ROADMAP.md) for complete feature timeline:
 ### Prerequisites
 
 - **Ardour 8.x** with OSC enabled
-- **Python 3.8+**
+- **Python 3.10+**
 - **uv** package manager (recommended)
 
 ### Installation
@@ -140,13 +140,18 @@ We welcome contributions from developers, musicians, and audio engineers!
 
 ## 📋 Current Status
 
-**Phase 1 (MVP)** - Foundation
+**Phase 1 (MVP)** - Core Implementation 🚧
 
 - ✅ Project structure and documentation
-- 🚧 OSC communication layer (in progress)
-- 🚧 Core MCP tools (in progress)
-- 📋 State management (planned)
-- 📋 Testing infrastructure (planned)
+- ✅ OSC communication bridge (bidirectional, 84% coverage)
+- ✅ State management with automatic updates
+- ✅ Transport control tools (13 methods)
+- ✅ Session information tools (9 methods)
+- 🚧 Track management tools (next up)
+- 📋 Testing expansion (in progress)
+- 📋 MCP server integration (planned)
+
+**Test Results**: 21/23 passing (91%) on OSC bridge
 
 Target: February 2025
 
