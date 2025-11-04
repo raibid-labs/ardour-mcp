@@ -9,7 +9,7 @@ OSC communication.
 import logging
 import threading
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -95,9 +95,7 @@ class ArdourState:
                 self._state.transport.tempo = tempo
             logger.debug(f"Transport state updated: {self._state.transport}")
 
-    def update_track(
-        self, strip_id: int, **kwargs: Any
-    ) -> None:
+    def update_track(self, strip_id: int, **kwargs: Any) -> None:
         """
         Update track state.
 
@@ -168,7 +166,3 @@ class ArdourState:
         with self._lock:
             self._state = SessionState()
             logger.info("State cache cleared")
-
-
-# TODO: Remove this when implementation begins
-Any = object  # Type annotation placeholder

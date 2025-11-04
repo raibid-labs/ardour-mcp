@@ -5,9 +5,7 @@ This module sets up the MCP server and registers all available tools
 for controlling Ardour via OSC.
 """
 
-import asyncio
 import logging
-from typing import Any
 
 # TODO: Import MCP SDK when implementation begins
 # from mcp import Server, Tool
