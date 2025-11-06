@@ -16,6 +16,7 @@ from ardour_mcp.ardour_state import ArdourState
 from ardour_mcp.osc_bridge import ArdourOSCBridge
 from ardour_mcp.tools.mixer import MixerTools
 from ardour_mcp.tools.navigation import NavigationTools
+from ardour_mcp.tools.recording import RecordingTools
 from ardour_mcp.tools.session import SessionTools
 from ardour_mcp.tools.tracks import TrackTools
 from ardour_mcp.tools.transport import TransportTools
@@ -53,6 +54,7 @@ class ArdourMCPServer:
         self.session_tools = SessionTools(self.osc_bridge, self.state)
         self.mixer_tools = MixerTools(self.osc_bridge, self.state)
         self.navigation_tools = NavigationTools(self.osc_bridge, self.state)
+        self.recording_tools = RecordingTools(self.osc_bridge, self.state)
 
         logger.info(f"Ardour MCP Server initialized for {host}:{port}")
 
@@ -610,7 +612,113 @@ class ArdourMCPServer:
             result = await self.navigation_tools.skip_backward(seconds)
             return [result]
 
-        logger.info("Registered 58 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 17 navigation)")
+        # Recording Control Tools - Global Recording
+        @self.server.call_tool()
+        async def start_recording() -> list[Any]:
+            """Start recording with transport playback."""
+            result = await self.recording_tools.start_recording()
+            return [result]
+
+        @self.server.call_tool()
+        async def stop_recording() -> list[Any]:
+            """Stop recording and transport."""
+            result = await self.recording_tools.stop_recording()
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_recording() -> list[Any]:
+            """Toggle global record enable state."""
+            result = await self.recording_tools.toggle_recording()
+            return [result]
+
+        @self.server.call_tool()
+        async def is_recording() -> list[Any]:
+            """Query current recording state."""
+            result = await self.recording_tools.is_recording()
+            return [result]
+
+        # Recording Control Tools - Punch Recording
+        @self.server.call_tool()
+        async def set_punch_range(start_frame: int, end_frame: int) -> list[Any]:
+            """
+            Set punch-in/out recording range.
+
+            Args:
+                start_frame: Punch-in point in frames
+                end_frame: Punch-out point in frames
+            """
+            result = await self.recording_tools.set_punch_range(start_frame, end_frame)
+            return [result]
+
+        @self.server.call_tool()
+        async def enable_punch_in() -> list[Any]:
+            """Enable punch-in recording mode."""
+            result = await self.recording_tools.enable_punch_in()
+            return [result]
+
+        @self.server.call_tool()
+        async def enable_punch_out() -> list[Any]:
+            """Enable punch-out recording mode."""
+            result = await self.recording_tools.enable_punch_out()
+            return [result]
+
+        @self.server.call_tool()
+        async def clear_punch_range() -> list[Any]:
+            """Disable punch-in and punch-out modes."""
+            result = await self.recording_tools.clear_punch_range()
+            return [result]
+
+        # Recording Control Tools - Input Monitoring
+        @self.server.call_tool()
+        async def set_input_monitoring(track_id: int, enabled: bool) -> list[Any]:
+            """
+            Enable/disable input monitoring for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                enabled: True to enable, False to disable
+            """
+            result = await self.recording_tools.set_input_monitoring(track_id, enabled)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_disk_monitoring(track_id: int, enabled: bool) -> list[Any]:
+            """
+            Enable/disable disk monitoring for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                enabled: True to enable, False to disable
+            """
+            result = await self.recording_tools.set_disk_monitoring(track_id, enabled)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_monitoring_mode(track_id: int, mode: str) -> list[Any]:
+            """
+            Set monitoring mode for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                mode: Monitoring mode ("input", "disk", or "auto")
+            """
+            result = await self.recording_tools.set_monitoring_mode(track_id, mode)
+            return [result]
+
+        # Recording Control Tools - Query Methods
+        @self.server.call_tool()
+        async def get_armed_tracks() -> list[Any]:
+            """List all tracks armed for recording."""
+            result = await self.recording_tools.get_armed_tracks()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_recording_state() -> list[Any]:
+            """Get complete recording state."""
+            result = await self.recording_tools.get_recording_state()
+            return [result]
+
+        logger.info("Registered 71 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 17 navigation, 13 recording)")
 
 
 async def serve() -> None:
