@@ -1,0 +1,21 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "python",
+      "package-name": "ardour-mcp",
+      "changelog-path": "CHANGELOG.md",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true,
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".release-please-manifest.json",
+          "jsonpath": "$['.']"
+        }
+      ]
+    }
+  },
+  "release-search-depth": 50,
+  "commit-search-depth": 500,
+  "sequential-calls": true
+}

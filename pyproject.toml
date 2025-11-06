@@ -1,6 +1,6 @@
 [project]
 name = "ardour-mcp"
-version = "0.0.1"
+dynamic = ["version"]
 description = "Model Context Protocol server for Ardour DAW - Control Ardour through AI assistants"
 readme = "README.md"
 license = { text = "MIT" }
@@ -45,8 +45,14 @@ Repository = "https://github.com/raibid-labs/ardour-mcp"
 ardour-mcp = "ardour_mcp.server:main"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/ardour_mcp/_version.py"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -7,41 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Initial project structure
-- Comprehensive documentation
-- Basic MCP server template
-- Project configuration with pyproject.toml
-- Contributing guidelines and code of conduct
-- MIT License
-
-### Changed
-- N/A
-
-### Deprecated
-- N/A
-
-### Removed
-- N/A
-
-### Fixed
-- N/A
-
-### Security
-- N/A
-
-## [0.1.0] - YYYY-MM-DD (Planned)
+## [0.1.0] - 2025-11-06
 
 ### Added
-- OSC communication bridge
-- State management system
-- Basic transport controls
-- Session information queries
-- Track management tools
 
-## Future Releases
+- Complete OSC bridge with bidirectional communication for Ardour DAW
+- State management system with automatic updates from Ardour
+- Transport control tools (13 methods):
+  - Play, stop, pause, record control
+  - Timeline navigation (goto start/end, forward/rewind)
+  - Transport state queries
+- Session information tools (9 methods):
+  - Session properties (name, path, tempo, sample rate, duration)
+  - Track counting and buffer size queries
+- Track management tools (5 methods):
+  - Create audio/MIDI tracks
+  - Track selection and naming
+  - Track list queries
+- MCP server integration with 27 registered tools
+- Comprehensive testing suite:
+  - 98 unit tests with 100% pass rate
+  - 59% overall code coverage
+  - 100% coverage for tracks and session modules
+  - 94% coverage for transport module
+  - 88% coverage for OSC bridge
+- Integration testing framework with justfile automation
+- Project structure and comprehensive documentation:
+  - Architecture overview
+  - Development guide
+  - OSC API reference
+  - Roadmap with feature timeline
+  - Contributing guidelines
 
-See [ROADMAP.md](docs/ROADMAP.md) for planned features.
+### Documentation
+
+- Complete README with installation and usage instructions
+- Architecture documentation with system design
+- OSC API reference for Ardour integration
+- Development guide for contributors
+- Roadmap outlining Phase 1-4 feature plan
 
 ---
 

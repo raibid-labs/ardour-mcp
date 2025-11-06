@@ -98,6 +98,8 @@ Add to your Claude Desktop configuration (`claude_desktop_config.json`):
 - [Development Guide](docs/DEVELOPMENT.md) - Setup and contribution workflow
 - [OSC API Reference](docs/OSC_API.md) - Complete Ardour OSC command reference
 - [Roadmap](docs/ROADMAP.md) - Feature timeline and milestones
+- [Release Process](docs/RELEASING.md) - Version management and release workflow
+- [Release Workflows](docs/RELEASE-WORKFLOWS.md) - Comparison of release automation options
 
 ## 🏗️ Architecture
 
@@ -164,6 +166,31 @@ We welcome contributions from developers, musicians, and audio engineers!
 Target: February 2025
 
 See [ROADMAP.md](docs/ROADMAP.md) for detailed timeline.
+
+## 📦 Releases
+
+Ardour MCP offers **three flexible release workflows**:
+
+1. **Manual** - Full control, manual push (`just release-patch`)
+2. **Semi-Automated** - One command releases (`just release-auto-patch`)
+3. **Fully Automated** - PR-based releases with Release Please
+
+Choose the workflow that fits your needs! See [RELEASE-WORKFLOWS.md](docs/RELEASE-WORKFLOWS.md) for detailed comparison.
+
+**Quick Release:**
+```bash
+# Check what would be released
+just release-status
+
+# Create and push release in one command
+just release-auto-patch
+```
+
+**Version Scheme:** [Semantic Versioning 2.0.0](https://semver.org/) (MAJOR.MINOR.PATCH)
+
+Check the [latest release](https://github.com/raibid-labs/ardour-mcp/releases) for installation and changelog.
+
+For complete details, see [RELEASING.md](docs/RELEASING.md).
 
 ## 🎓 Resources
 
