@@ -69,6 +69,7 @@ addopts = [
 [tool.ruff]
 line-length = 100
 target-version = "py38"
+extend-exclude = ["src/ardour_mcp/_version.py"]
 
 [tool.ruff.lint]
 select = [
