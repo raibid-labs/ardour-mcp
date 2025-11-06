@@ -14,6 +14,7 @@ from mcp.server.stdio import stdio_server
 
 from ardour_mcp.ardour_state import ArdourState
 from ardour_mcp.osc_bridge import ArdourOSCBridge
+from ardour_mcp.tools.mixer import MixerTools
 from ardour_mcp.tools.session import SessionTools
 from ardour_mcp.tools.tracks import TrackTools
 from ardour_mcp.tools.transport import TransportTools
@@ -49,6 +50,7 @@ class ArdourMCPServer:
         self.transport_tools = TransportTools(self.osc_bridge, self.state)
         self.track_tools = TrackTools(self.osc_bridge, self.state)
         self.session_tools = SessionTools(self.osc_bridge, self.state)
+        self.mixer_tools = MixerTools(self.osc_bridge, self.state)
 
         logger.info(f"Ardour MCP Server initialized for {host}:{port}")
 
@@ -288,7 +290,152 @@ class ArdourMCPServer:
             result = await self.session_tools.is_session_dirty()
             return [result]
 
-        logger.info("Registered 27 MCP tools (11 transport, 5 track, 9 session, 2 navigation)")
+        # Mixer Control Tools
+        @self.server.call_tool()
+        async def set_track_volume(track_id: int, volume_db: float) -> list[Any]:
+            """
+            Set track volume/gain in dB.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                volume_db: Gain in dB (range: -193.0 to +6.0)
+            """
+            result = await self.mixer_tools.set_track_volume(track_id, volume_db)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_track_pan(track_id: int, pan: float) -> list[Any]:
+            """
+            Set track pan position.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                pan: Pan position (range: -1.0 to +1.0, where 0.0 = center)
+            """
+            result = await self.mixer_tools.set_track_pan(track_id, pan)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_track_mute(track_id: int, muted: bool) -> list[Any]:
+            """
+            Set track mute state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                muted: True to mute, False to unmute
+            """
+            result = await self.mixer_tools.set_track_mute(track_id, muted)
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_track_mute(track_id: int) -> list[Any]:
+            """
+            Toggle track mute state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.mixer_tools.toggle_track_mute(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_track_solo(track_id: int, soloed: bool) -> list[Any]:
+            """
+            Set track solo state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                soloed: True to solo, False to unsolo
+            """
+            result = await self.mixer_tools.set_track_solo(track_id, soloed)
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_track_solo(track_id: int) -> list[Any]:
+            """
+            Toggle track solo state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.mixer_tools.toggle_track_solo(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_track_rec_enable(track_id: int, enabled: bool) -> list[Any]:
+            """
+            Set track record enable state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                enabled: True to arm for recording, False to disarm
+            """
+            result = await self.mixer_tools.set_track_rec_enable(track_id, enabled)
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_track_rec_enable(track_id: int) -> list[Any]:
+            """
+            Toggle track record enable state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.mixer_tools.toggle_track_rec_enable(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def arm_track_for_recording(track_id: int) -> list[Any]:
+            """
+            Arm a track for recording (convenience method).
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.mixer_tools.arm_track_for_recording(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def disarm_track(track_id: int) -> list[Any]:
+            """
+            Disarm a track from recording (convenience method).
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.mixer_tools.disarm_track(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def mute_all_tracks() -> list[Any]:
+            """Mute all tracks in the session."""
+            result = await self.mixer_tools.mute_all_tracks()
+            return [result]
+
+        @self.server.call_tool()
+        async def unmute_all_tracks() -> list[Any]:
+            """Unmute all tracks in the session."""
+            result = await self.mixer_tools.unmute_all_tracks()
+            return [result]
+
+        @self.server.call_tool()
+        async def clear_all_solos() -> list[Any]:
+            """Clear solo state from all tracks."""
+            result = await self.mixer_tools.clear_all_solos()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_track_mixer_state(track_id: int) -> list[Any]:
+            """
+            Get current mixer state for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.mixer_tools.get_track_mixer_state(track_id)
+            return [result]
+
+        logger.info("Registered 41 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 2 navigation)")
 
 
 async def serve() -> None:
