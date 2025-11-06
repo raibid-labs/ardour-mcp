@@ -71,7 +71,7 @@ class TrackTools:
         tracks = self.state.get_all_tracks()
         track_count = len(tracks)
 
-        message = f"Created audio track"
+        message = "Created audio track"
         if name:
             message += f" '{name}'"
             # Note: Track naming after creation would require getting the new track ID
@@ -123,7 +123,7 @@ class TrackTools:
         tracks = self.state.get_all_tracks()
         track_count = len(tracks)
 
-        message = f"Created MIDI track"
+        message = "Created MIDI track"
         if name:
             message += f" '{name}'"
 
@@ -162,7 +162,7 @@ class TrackTools:
 
         # Format track information
         track_list = []
-        for strip_id, track in sorted(tracks.items()):
+        for _strip_id, track in sorted(tracks.items()):
             track_list.append({
                 "strip_id": track.strip_id,
                 "name": track.name,

@@ -4,7 +4,7 @@ Tests for track management tools.
 Tests all track-related MCP tools.
 """
 
-from unittest.mock import MagicMock, Mock
+from unittest.mock import Mock
 
 import pytest
 
