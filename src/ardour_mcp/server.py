@@ -7,7 +7,7 @@ for controlling Ardour via OSC.
 
 import asyncio
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
@@ -441,7 +441,7 @@ class ArdourMCPServer:
 
         # Navigation Control Tools - Marker Management
         @self.server.call_tool()
-        async def create_marker(name: str, position: int = None) -> list[Any]:
+        async def create_marker(name: str, position: Optional[int] = None) -> list[Any]:
             """
             Create a marker at specified position or current position.
 
