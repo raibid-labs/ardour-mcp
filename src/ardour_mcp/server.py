@@ -15,6 +15,7 @@ from mcp.server.stdio import stdio_server
 from ardour_mcp.ardour_state import ArdourState
 from ardour_mcp.osc_bridge import ArdourOSCBridge
 from ardour_mcp.tools.mixer import MixerTools
+from ardour_mcp.tools.navigation import NavigationTools
 from ardour_mcp.tools.session import SessionTools
 from ardour_mcp.tools.tracks import TrackTools
 from ardour_mcp.tools.transport import TransportTools
@@ -51,6 +52,7 @@ class ArdourMCPServer:
         self.track_tools = TrackTools(self.osc_bridge, self.state)
         self.session_tools = SessionTools(self.osc_bridge, self.state)
         self.mixer_tools = MixerTools(self.osc_bridge, self.state)
+        self.navigation_tools = NavigationTools(self.osc_bridge, self.state)
 
         logger.info(f"Ardour MCP Server initialized for {host}:{port}")
 
@@ -435,7 +437,180 @@ class ArdourMCPServer:
             result = await self.mixer_tools.get_track_mixer_state(track_id)
             return [result]
 
-        logger.info("Registered 41 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 2 navigation)")
+        # Navigation Control Tools - Marker Management
+        @self.server.call_tool()
+        async def create_marker(name: str, position: int = None) -> list[Any]:
+            """
+            Create a marker at specified position or current position.
+
+            Args:
+                name: Name for the new marker
+                position: Position in frames (None = current position)
+            """
+            result = await self.navigation_tools.create_marker(name, position)
+            return [result]
+
+        @self.server.call_tool()
+        async def delete_marker(name: str) -> list[Any]:
+            """
+            Delete a marker by name.
+
+            Args:
+                name: Name of the marker to delete
+            """
+            result = await self.navigation_tools.delete_marker(name)
+            return [result]
+
+        @self.server.call_tool()
+        async def rename_marker(old_name: str, new_name: str) -> list[Any]:
+            """
+            Rename a marker.
+
+            Args:
+                old_name: Current name of the marker
+                new_name: New name for the marker
+            """
+            result = await self.navigation_tools.rename_marker(old_name, new_name)
+            return [result]
+
+        @self.server.call_tool()
+        async def goto_marker_by_name(name: str) -> list[Any]:
+            """
+            Jump to a named marker.
+
+            Args:
+                name: Name of the marker to jump to
+            """
+            result = await self.navigation_tools.goto_marker(name)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_marker_position(name: str) -> list[Any]:
+            """
+            Get the position of a named marker.
+
+            Args:
+                name: Name of the marker to query
+            """
+            result = await self.navigation_tools.get_marker_position(name)
+            return [result]
+
+        # Navigation Control Tools - Loop Control
+        @self.server.call_tool()
+        async def set_loop_range_frames(start_frame: int, end_frame: int) -> list[Any]:
+            """
+            Set loop range in frames.
+
+            Args:
+                start_frame: Loop start position in frames
+                end_frame: Loop end position in frames
+            """
+            result = await self.navigation_tools.set_loop_range(start_frame, end_frame)
+            return [result]
+
+        @self.server.call_tool()
+        async def enable_loop() -> list[Any]:
+            """Enable loop playback."""
+            result = await self.navigation_tools.enable_loop()
+            return [result]
+
+        @self.server.call_tool()
+        async def disable_loop() -> list[Any]:
+            """Disable loop playback."""
+            result = await self.navigation_tools.disable_loop()
+            return [result]
+
+        @self.server.call_tool()
+        async def clear_loop_range() -> list[Any]:
+            """Clear loop range and disable looping."""
+            result = await self.navigation_tools.clear_loop_range()
+            return [result]
+
+        # Navigation Control Tools - Tempo & Time Signature
+        @self.server.call_tool()
+        async def set_session_tempo(bpm: float) -> list[Any]:
+            """
+            Set session tempo in beats per minute.
+
+            Args:
+                bpm: Tempo in BPM (range: 20.0 to 300.0)
+            """
+            result = await self.navigation_tools.set_tempo(bpm)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_session_tempo() -> list[Any]:
+            """Get current session tempo."""
+            result = await self.navigation_tools.get_tempo()
+            return [result]
+
+        @self.server.call_tool()
+        async def set_session_time_signature(numerator: int, denominator: int) -> list[Any]:
+            """
+            Set time signature.
+
+            Args:
+                numerator: Beats per bar (e.g., 4 in 4/4 time)
+                denominator: Note value per beat (e.g., 4 in 4/4 time)
+            """
+            result = await self.navigation_tools.set_time_signature(numerator, denominator)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_session_time_signature() -> list[Any]:
+            """Get current time signature."""
+            result = await self.navigation_tools.get_time_signature()
+            return [result]
+
+        # Navigation Control Tools - Navigation Helpers
+        @self.server.call_tool()
+        async def goto_timecode(hours: int, minutes: int, seconds: int, frames: int = 0) -> list[Any]:
+            """
+            Jump to a specific timecode position.
+
+            Args:
+                hours: Hours component (0-23)
+                minutes: Minutes component (0-59)
+                seconds: Seconds component (0-59)
+                frames: Frame component (default: 0)
+            """
+            result = await self.navigation_tools.goto_time(hours, minutes, seconds, frames)
+            return [result]
+
+        @self.server.call_tool()
+        async def goto_bar_number(bar_number: int) -> list[Any]:
+            """
+            Jump to a specific bar number.
+
+            Args:
+                bar_number: Bar number to jump to (1-based)
+            """
+            result = await self.navigation_tools.goto_bar(bar_number)
+            return [result]
+
+        @self.server.call_tool()
+        async def skip_forward_seconds(seconds: float) -> list[Any]:
+            """
+            Skip forward by specified number of seconds.
+
+            Args:
+                seconds: Number of seconds to skip forward
+            """
+            result = await self.navigation_tools.skip_forward(seconds)
+            return [result]
+
+        @self.server.call_tool()
+        async def skip_backward_seconds(seconds: float) -> list[Any]:
+            """
+            Skip backward by specified number of seconds.
+
+            Args:
+                seconds: Number of seconds to skip backward
+            """
+            result = await self.navigation_tools.skip_backward(seconds)
+            return [result]
+
+        logger.info("Registered 58 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 17 navigation)")
 
 
 async def serve() -> None:
