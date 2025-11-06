@@ -5,21 +5,18 @@ This module sets up the MCP server and registers all available tools
 for controlling Ardour via OSC.
 """
 
+import asyncio
 import logging
+from typing import Any
 
-# TODO: Import MCP SDK when implementation begins
-# from mcp import Server, Tool
-# from mcp.server.stdio import stdio_server
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
 
-# TODO: Import internal modules
-# from ardour_mcp.osc_bridge import ArdourOSCBridge
-# from ardour_mcp.ardour_state import ArdourState
-# from ardour_mcp.tools import (
-#     transport,
-#     tracks,
-#     session,
-#     recording,
-# )
+from ardour_mcp.ardour_state import ArdourState
+from ardour_mcp.osc_bridge import ArdourOSCBridge
+from ardour_mcp.tools.session import SessionTools
+from ardour_mcp.tools.tracks import TrackTools
+from ardour_mcp.tools.transport import TransportTools
 
 logger = logging.getLogger(__name__)
 
@@ -42,10 +39,17 @@ class ArdourMCPServer:
         """
         self.host = host
         self.port = port
-        # TODO: Initialize components
-        # self.osc_bridge = ArdourOSCBridge(host, port)
-        # self.state = ArdourState()
-        # self.server = Server("ardour-mcp")
+
+        # Initialize core components
+        self.osc_bridge = ArdourOSCBridge(host, port)
+        self.state = ArdourState()
+        self.server = Server("ardour-mcp")
+
+        # Initialize tool classes
+        self.transport_tools = TransportTools(self.osc_bridge, self.state)
+        self.track_tools = TrackTools(self.osc_bridge, self.state)
+        self.session_tools = SessionTools(self.osc_bridge, self.state)
+
         logger.info(f"Ardour MCP Server initialized for {host}:{port}")
 
     async def start(self) -> None:
@@ -56,13 +60,22 @@ class ArdourMCPServer:
         and starts the MCP server.
         """
         logger.info("Starting Ardour MCP Server...")
-        # TODO: Implement startup sequence
-        # 1. Connect to Ardour OSC
-        # 2. Register tools
-        # 3. Start MCP server
-        # await self.osc_bridge.connect()
-        # self._register_tools()
-        # await self.server.start()
+
+        # Connect to Ardour OSC
+        try:
+            await self.osc_bridge.connect()
+            logger.info("Connected to Ardour OSC")
+        except Exception as e:
+            logger.error(f"Failed to connect to Ardour: {e}")
+            raise
+
+        # Register state feedback handlers
+        self.state.register_feedback_handlers(self.osc_bridge)
+        logger.info("State feedback handlers registered")
+
+        # Register MCP tools
+        self._register_tools()
+
         logger.info("Ardour MCP Server started successfully")
 
     async def stop(self) -> None:
@@ -72,9 +85,13 @@ class ArdourMCPServer:
         Cleanly shuts down the OSC connection and MCP server.
         """
         logger.info("Stopping Ardour MCP Server...")
-        # TODO: Implement shutdown sequence
-        # await self.osc_bridge.disconnect()
-        # await self.server.stop()
+
+        # Disconnect from Ardour
+        await self.osc_bridge.disconnect()
+
+        # Clear state
+        self.state.clear()
+
         logger.info("Ardour MCP Server stopped")
 
     def _register_tools(self) -> None:
@@ -86,15 +103,213 @@ class ArdourMCPServer:
         - Transport controls
         - Track management
         - Session information
-        - Recording controls
         """
-        # TODO: Register tools from modules
-        # Transport
-        # self.server.register_tool(transport.transport_play)
-        # self.server.register_tool(transport.transport_stop)
-        # self.server.register_tool(transport.transport_record)
-        # ... etc
-        logger.info("MCP tools registered")
+        # Transport Control Tools
+        @self.server.call_tool()
+        async def transport_play() -> list[Any]:
+            """Start playback in Ardour."""
+            result = await self.transport_tools.transport_play()
+            return [result]
+
+        @self.server.call_tool()
+        async def transport_stop() -> list[Any]:
+            """Stop playback in Ardour."""
+            result = await self.transport_tools.transport_stop()
+            return [result]
+
+        @self.server.call_tool()
+        async def transport_pause() -> list[Any]:
+            """Toggle pause in Ardour."""
+            result = await self.transport_tools.transport_pause()
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_record() -> list[Any]:
+            """Toggle recording mode in Ardour."""
+            result = await self.transport_tools.toggle_record()
+            return [result]
+
+        @self.server.call_tool()
+        async def goto_start() -> list[Any]:
+            """Jump to session start."""
+            result = await self.transport_tools.goto_start()
+            return [result]
+
+        @self.server.call_tool()
+        async def goto_end() -> list[Any]:
+            """Jump to session end."""
+            result = await self.transport_tools.goto_end()
+            return [result]
+
+        @self.server.call_tool()
+        async def goto_marker(marker_name: str) -> list[Any]:
+            """
+            Jump to a named marker.
+
+            Args:
+                marker_name: Name of the marker to jump to
+            """
+            result = await self.transport_tools.goto_marker(marker_name)
+            return [result]
+
+        @self.server.call_tool()
+        async def locate(frame: int) -> list[Any]:
+            """
+            Jump to a specific frame position.
+
+            Args:
+                frame: Frame number to jump to
+            """
+            result = await self.transport_tools.locate(frame)
+            return [result]
+
+        @self.server.call_tool()
+        async def set_loop_range(start_frame: int, end_frame: int) -> list[Any]:
+            """
+            Set loop range.
+
+            Args:
+                start_frame: Loop start frame
+                end_frame: Loop end frame
+            """
+            result = await self.transport_tools.set_loop_range(start_frame, end_frame)
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_loop() -> list[Any]:
+            """Toggle loop mode."""
+            result = await self.transport_tools.toggle_loop()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_transport_position() -> list[Any]:
+            """Get current transport position and state."""
+            result = await self.transport_tools.get_transport_position()
+            return [result]
+
+        # Track Management Tools
+        @self.server.call_tool()
+        async def create_audio_track(name: str = "") -> list[Any]:
+            """
+            Create a new audio track.
+
+            Args:
+                name: Optional name for the new track
+            """
+            result = await self.track_tools.create_audio_track(name)
+            return [result]
+
+        @self.server.call_tool()
+        async def create_midi_track(name: str = "") -> list[Any]:
+            """
+            Create a new MIDI track.
+
+            Args:
+                name: Optional name for the new track
+            """
+            result = await self.track_tools.create_midi_track(name)
+            return [result]
+
+        @self.server.call_tool()
+        async def list_tracks() -> list[Any]:
+            """List all tracks in the session."""
+            result = await self.track_tools.list_tracks()
+            return [result]
+
+        @self.server.call_tool()
+        async def select_track(track_id: int) -> list[Any]:
+            """
+            Select a track by ID.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.track_tools.select_track(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def rename_track(track_id: int, new_name: str) -> list[Any]:
+            """
+            Rename a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                new_name: New name for the track
+            """
+            result = await self.track_tools.rename_track(track_id, new_name)
+            return [result]
+
+        # Session Information Tools
+        @self.server.call_tool()
+        async def get_session_info() -> list[Any]:
+            """Get complete session information."""
+            result = await self.session_tools.get_session_info()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_tempo() -> list[Any]:
+            """Get current session tempo."""
+            result = await self.session_tools.get_tempo()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_time_signature() -> list[Any]:
+            """Get current time signature."""
+            result = await self.session_tools.get_time_signature()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_sample_rate() -> list[Any]:
+            """Get session sample rate."""
+            result = await self.session_tools.get_sample_rate()
+            return [result]
+
+        @self.server.call_tool()
+        async def list_markers() -> list[Any]:
+            """List all markers in the session."""
+            result = await self.session_tools.list_markers()
+            return [result]
+
+        @self.server.call_tool()
+        async def save_session() -> list[Any]:
+            """Save the current session."""
+            result = await self.session_tools.save_session()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_track_count() -> list[Any]:
+            """Get number of tracks in session."""
+            result = await self.session_tools.get_track_count()
+            return [result]
+
+        @self.server.call_tool()
+        async def is_session_dirty() -> list[Any]:
+            """Check if session has unsaved changes."""
+            result = await self.session_tools.is_session_dirty()
+            return [result]
+
+        logger.info("Registered 27 MCP tools (11 transport, 5 track, 9 session, 2 navigation)")
+
+
+async def serve() -> None:
+    """
+    Main async serve function for the MCP server.
+
+    Initializes and runs the Ardour MCP server with stdio transport.
+    """
+    # Create server instance
+    ardour_server = ArdourMCPServer()
+
+    # Start the server (connects to Ardour and registers tools)
+    await ardour_server.start()
+
+    # Run the stdio server
+    async with stdio_server() as (read_stream, write_stream):
+        await ardour_server.server.run(
+            read_stream,
+            write_stream,
+            ardour_server.server.create_initialization_options()
+        )
 
 
 def main() -> None:
@@ -112,21 +327,13 @@ def main() -> None:
     logger.info("Ardour MCP - Model Context Protocol server for Ardour DAW")
     logger.info("Version: 0.0.1")
 
-    # TODO: Implement server startup
-    # For now, just log that we're ready
-    logger.info("Server ready (implementation pending)")
-    logger.info("Next steps: Implement OSC bridge and MCP tools")
-
-    # TODO: Uncomment when implementation is ready
-    # server = ArdourMCPServer()
-    # try:
-    #     asyncio.run(server.start())
-    # except KeyboardInterrupt:
-    #     logger.info("Received shutdown signal")
-    #     asyncio.run(server.stop())
-    # except Exception as e:
-    #     logger.error(f"Server error: {e}", exc_info=True)
-    #     raise
+    try:
+        asyncio.run(serve())
+    except KeyboardInterrupt:
+        logger.info("Received shutdown signal")
+    except Exception as e:
+        logger.error(f"Server error: {e}", exc_info=True)
+        raise
 
 
 if __name__ == "__main__":
