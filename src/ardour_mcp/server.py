@@ -15,6 +15,8 @@ from mcp.server.stdio import stdio_server
 from ardour_mcp.ardour_state import ArdourState
 from ardour_mcp.osc_bridge import ArdourOSCBridge
 from ardour_mcp.tools.advanced_mixer import AdvancedMixerTools
+from ardour_mcp.tools.automation import AutomationTools
+from ardour_mcp.tools.metering import MeteringTools
 from ardour_mcp.tools.mixer import MixerTools
 from ardour_mcp.tools.navigation import NavigationTools
 from ardour_mcp.tools.recording import RecordingTools
@@ -55,6 +57,8 @@ class ArdourMCPServer:
         self.session_tools = SessionTools(self.osc_bridge, self.state)
         self.mixer_tools = MixerTools(self.osc_bridge, self.state)
         self.advanced_mixer_tools = AdvancedMixerTools(self.osc_bridge, self.state)
+        self.automation_tools = AutomationTools(self.osc_bridge, self.state)
+        self.metering_tools = MeteringTools(self.osc_bridge, self.state)
         self.navigation_tools = NavigationTools(self.osc_bridge, self.state)
         self.recording_tools = RecordingTools(self.osc_bridge, self.state)
 
@@ -898,7 +902,281 @@ class ArdourMCPServer:
             result = await self.advanced_mixer_tools.get_track_sends_count(track_id)
             return [result]
 
-        logger.info("Registered 86 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 15 advanced mixer, 17 navigation, 13 recording)")
+        # Automation Control Tools - Automation Modes
+        @self.server.call_tool()
+        async def set_automation_mode(track_id: int, parameter: str, mode: str) -> list[Any]:
+            """
+            Set automation mode for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+                mode: Automation mode (off, play, write, touch, latch)
+            """
+            result = await self.automation_tools.set_automation_mode(track_id, parameter, mode)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_automation_mode(track_id: int, parameter: str) -> list[Any]:
+            """
+            Get automation mode for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.get_automation_mode(track_id, parameter)
+            return [result]
+
+        @self.server.call_tool()
+        async def list_automation_parameters(track_id: int) -> list[Any]:
+            """
+            List available automation parameters for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.automation_tools.list_automation_parameters(track_id)
+            return [result]
+
+        # Automation Control Tools - Automation Recording
+        @self.server.call_tool()
+        async def enable_automation_write(track_id: int) -> list[Any]:
+            """
+            Enable automation write mode for all parameters on a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.automation_tools.enable_automation_write(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def disable_automation_write(track_id: int) -> list[Any]:
+            """
+            Disable automation write mode for all parameters on a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.automation_tools.disable_automation_write(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def record_automation(track_id: int, parameter: str) -> list[Any]:
+            """
+            Start recording automation for a specific parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.record_automation(track_id, parameter)
+            return [result]
+
+        @self.server.call_tool()
+        async def stop_automation_recording(track_id: int, parameter: str) -> list[Any]:
+            """
+            Stop recording automation for a specific parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.stop_automation_recording(track_id, parameter)
+            return [result]
+
+        # Automation Control Tools - Automation Editing
+        @self.server.call_tool()
+        async def clear_automation(track_id: int, parameter: str, start_frame: Optional[int] = None, end_frame: Optional[int] = None) -> list[Any]:
+            """
+            Clear automation data for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+                start_frame: Optional start frame for range
+                end_frame: Optional end frame for range
+            """
+            result = await self.automation_tools.clear_automation(track_id, parameter, start_frame, end_frame)
+            return [result]
+
+        @self.server.call_tool()
+        async def has_automation(track_id: int, parameter: str) -> list[Any]:
+            """
+            Check if automation exists for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.has_automation(track_id, parameter)
+            return [result]
+
+        @self.server.call_tool()
+        async def copy_automation(source_track: int, dest_track: int, parameter: str) -> list[Any]:
+            """
+            Copy automation data between tracks.
+
+            Args:
+                source_track: Source track strip ID (1-based)
+                dest_track: Destination track strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.copy_automation(source_track, dest_track, parameter)
+            return [result]
+
+        # Automation Control Tools - Automation Playback
+        @self.server.call_tool()
+        async def enable_automation_playback(track_id: int, parameter: str) -> list[Any]:
+            """
+            Enable automation playback for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.enable_automation_playback(track_id, parameter)
+            return [result]
+
+        @self.server.call_tool()
+        async def disable_automation_playback(track_id: int, parameter: str) -> list[Any]:
+            """
+            Disable automation playback for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.disable_automation_playback(track_id, parameter)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_automation_state(track_id: int, parameter: str) -> list[Any]:
+            """
+            Get complete automation state for a parameter.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                parameter: Parameter name (gain, pan, mute, plugin)
+            """
+            result = await self.automation_tools.get_automation_state(track_id, parameter)
+            return [result]
+
+        # Metering & Monitoring Tools - Level Monitoring
+        @self.server.call_tool()
+        async def get_track_level(track_id: int) -> list[Any]:
+            """
+            Get peak and RMS levels for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.metering_tools.get_track_level(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_master_level() -> list[Any]:
+            """Get peak and RMS levels for master bus."""
+            result = await self.metering_tools.get_master_level()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_bus_level(bus_id: int) -> list[Any]:
+            """
+            Get peak and RMS levels for a bus.
+
+            Args:
+                bus_id: Bus strip ID (1-based)
+            """
+            result = await self.metering_tools.get_bus_level(bus_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def monitor_levels(track_ids: list[int], duration: float = 5.0) -> list[Any]:
+            """
+            Monitor levels over time for multiple tracks.
+
+            Args:
+                track_ids: List of track strip IDs to monitor (1-based)
+                duration: Monitoring duration in seconds (default: 5.0)
+            """
+            result = await self.metering_tools.monitor_levels(track_ids, duration)
+            return [result]
+
+        # Metering & Monitoring Tools - Phase & Correlation
+        @self.server.call_tool()
+        async def get_phase_correlation(track_id: int) -> list[Any]:
+            """
+            Get stereo phase correlation for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.metering_tools.get_phase_correlation(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_master_phase_correlation() -> list[Any]:
+            """Get stereo phase correlation for master bus."""
+            result = await self.metering_tools.get_master_phase_correlation()
+            return [result]
+
+        @self.server.call_tool()
+        async def detect_phase_issues() -> list[Any]:
+            """Detect tracks with phase problems."""
+            result = await self.metering_tools.detect_phase_issues()
+            return [result]
+
+        # Metering & Monitoring Tools - Loudness Metering
+        @self.server.call_tool()
+        async def analyze_loudness(track_id: Optional[int] = None) -> list[Any]:
+            """
+            Analyze loudness (LUFS/LU) using EBU R128 standard.
+
+            Args:
+                track_id: Track strip ID to analyze (1-based), or None for master
+            """
+            result = await self.metering_tools.analyze_loudness(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_integrated_loudness() -> list[Any]:
+            """Get integrated loudness (LUFS) for master bus."""
+            result = await self.metering_tools.get_integrated_loudness()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_loudness_range() -> list[Any]:
+            """Get loudness range (LU) for master bus."""
+            result = await self.metering_tools.get_loudness_range()
+            return [result]
+
+        # Metering & Monitoring Tools - Analysis & Export
+        @self.server.call_tool()
+        async def detect_clipping(track_id: int) -> list[Any]:
+            """
+            Detect clipping events from level data.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.metering_tools.detect_clipping(track_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def export_level_data(track_ids: list[int], duration: float = 10.0) -> list[Any]:
+            """
+            Export meter data for AI analysis.
+
+            Args:
+                track_ids: List of track strip IDs to export (1-based)
+                duration: Duration to collect data in seconds (default: 10.0)
+            """
+            result = await self.metering_tools.export_level_data(track_ids, duration)
+            return [result]
+
+        logger.info("Registered 111 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 15 advanced mixer, 13 automation, 12 metering, 17 navigation, 13 recording)")
 
 
 async def serve() -> None:
