@@ -55,9 +55,59 @@ uv run ardour-mcp --help
 
 **Important**: The feedback options allow ardour-mcp to receive real-time updates from Ardour about track states, meter levels, automation, and more.
 
-## Step 4: Configure Claude Desktop
+## Step 4: Configure Your MCP Client
 
-Add ardour-mcp to your Claude Desktop MCP configuration:
+Choose your client and follow the appropriate setup:
+
+### Option A: Claude Code (Recommended)
+
+**Method 1: CLI (Easiest - One Command!)**
+
+```bash
+# Replace with your actual path
+claude mcp add --transport stdio ardour --scope user \
+  -- uv --directory /absolute/path/to/ardour-mcp run ardour-mcp
+```
+
+**Verify it worked:**
+```bash
+claude mcp list
+# Should show: ardour: ... - ✓ Connected
+
+claude mcp get ardour
+# Shows full configuration details
+```
+
+**Method 2: Manual Configuration**
+
+Create or edit `.mcp.json` in your project directory OR `~/.claude.json` in your home directory:
+
+```json
+{
+  "mcpServers": {
+    "ardour": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/absolute/path/to/ardour-mcp",
+        "run",
+        "ardour-mcp"
+      ]
+    }
+  }
+}
+```
+
+**Configuration Scopes:**
+- **Project**: `.mcp.json` in project root (shared with team, requires approval)
+- **User**: `~/.claude.json` (available in all your projects)
+
+**That's it for Claude Code!** The server is now available - no restart needed.
+
+### Option B: Claude Desktop
+
+Add to your `claude_desktop_config.json`:
 
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
@@ -98,17 +148,26 @@ Example:
 }
 ```
 
-## Step 5: Restart Claude Desktop
+**Restart Claude Desktop** to load the new configuration.
 
-Close and reopen Claude Desktop completely to load the new MCP server configuration.
+## Step 5: Verify Connection
 
-## Step 6: Verify Connection
+### For Claude Code:
+
+```bash
+claude mcp list
+# Should show: ardour: ... - ✓ Connected
+```
+
+### For Claude Desktop:
 
 1. **Make sure Ardour is running** with a session open
 2. **Open Claude Desktop**
-3. Look for the MCP server indicator (🔌 icon) in the Claude Desktop interface
-4. **Test the connection** by asking Claude:
+3. Look for the MCP server indicator (🔌 icon)
 
+### Test the Connection (Both Clients):
+
+Ask Claude:
 ```
 "List all tracks in my Ardour session"
 ```
@@ -124,24 +183,59 @@ If everything is configured correctly, Claude will respond with information abou
 - Verify the OSC server port is 3819
 - Make sure no firewall is blocking UDP port 3819
 
-### MCP server not appearing in Claude Desktop
+### Claude Code: Server not showing as connected
+
+```bash
+# Check server status
+claude mcp list
+
+# Get detailed diagnostics
+claude mcp get ardour
+
+# Remove and re-add if needed
+claude mcp remove ardour --scope user
+claude mcp add --transport stdio ardour --scope user \
+  -- uv --directory /path/to/ardour-mcp run ardour-mcp
+```
+
+Common issues:
+- Path is incorrect (must be absolute)
+- uv not in PATH: `which uv` should show a path
+- Server process can't start: Check `uv run ardour-mcp` works standalone
+
+### Claude Desktop: MCP server not appearing
 
 - Check that the path in `claude_desktop_config.json` is absolute and correct
 - Verify uv is installed: `uv --version`
 - Check Claude Desktop logs for error messages
 - Try restarting Claude Desktop again
+- Look for JSON syntax errors in config file
 
 ### "Command not found: uv"
 
 - Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- Make sure uv is in your PATH
+- Make sure uv is in your PATH: `echo $PATH | grep .cargo/bin`
 - Try logging out and back in to refresh your shell environment
+- Test: `uv --version` should show version number
+
+### "Command not found: claude" (Claude Code CLI)
+
+- Claude Code CLI should be automatically installed with Claude Code
+- Check if installed: `which claude`
+- If missing, reinstall Claude Code from https://code.claude.com
 
 ### OSC feedback not working
 
 - In Ardour OSC preferences, make sure **all feedback options** are enabled
 - Verify feedback is set to send to a specific port
 - Check that no other application is using the OSC ports
+- Test OSC manually: Tools like `oscdump` can verify OSC traffic
+
+### Permission denied errors
+
+- Make sure you have execute permissions on the ardour-mcp directory
+- Check that uv can access the virtual environment: `uv sync --all-extras`
+- On Linux/macOS, verify file permissions: `ls -la /path/to/ardour-mcp`
 
 ## Next Steps
 

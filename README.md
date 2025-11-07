@@ -66,7 +66,7 @@ See [ROADMAP.md](docs/ROADMAP.md) for complete feature timeline.
 
 - **Ardour 8.x or 9.x** installed
 - **Python 3.11+** (Python 3.10 also supported)
-- **Claude Desktop** (or any MCP-compatible client)
+- **Claude Desktop or Claude Code** (or any MCP-compatible client)
 
 ### Installation
 
@@ -93,9 +93,55 @@ uv sync --all-extras
    - **Feedback**: Enable **all feedback options**
    - Click **OK**
 
-### Configure Claude Desktop
+### Configure MCP Client
+
+Choose your client:
+
+<details>
+<summary><b>Claude Code</b> (Recommended - One command!)</summary>
+
+**Using CLI** (easiest):
+```bash
+claude mcp add --transport stdio ardour --scope user \
+  -- uv --directory /absolute/path/to/ardour-mcp run ardour-mcp
+```
+
+**Manual configuration** - Add to `.mcp.json` in your project or `~/.claude.json`:
+```json
+{
+  "mcpServers": {
+    "ardour": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/absolute/path/to/ardour-mcp",
+        "run",
+        "ardour-mcp"
+      ]
+    }
+  }
+}
+```
+
+**Verify installation**:
+```bash
+claude mcp list
+claude mcp get ardour
+```
+
+The server should show as "✓ Connected". That's it - ardour-mcp is now available in Claude Code!
+
+</details>
+
+<details>
+<summary><b>Claude Desktop</b></summary>
 
 Add to your `claude_desktop_config.json`:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+**Linux**: `~/.config/Claude/claude_desktop_config.json`
 
 ```json
 {
@@ -113,7 +159,9 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-**That's it!** Restart Claude Desktop and start controlling Ardour through natural language.
+Restart Claude Desktop and the server will be available.
+
+</details>
 
 **Detailed setup instructions**: [docs/QUICK_START.md](docs/QUICK_START.md)
 
