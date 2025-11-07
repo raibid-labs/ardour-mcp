@@ -7,26 +7,101 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Phase 3 (Advanced Mixing) - In Development
+---
 
-#### Advanced Mixer Operations
-- Send/return level control and enable/disable
-- Plugin parameter control and activation/deactivation
-- Bus operations and bus send tracking
-- Extended query methods for mixer state
+## [0.3.0] - 2025-11-06
 
-#### Planned for v0.3.0
-- Automation modes and automation recording
-- Enhanced metering (phase correlation, loudness analysis)
-- Extended plugin preset management
-- VCA control and monitor section management
+### Phase 3: Professional Mixing & Mastering
 
-### Phase 2 (Essential Features) - Ready for v0.2.0 Release
+This release implements comprehensive professional mixing and mastering tools, bringing the total to **111 registered MCP tools** with **86% test coverage** across **581 tests**.
 
-When released as v0.2.0:
-- **Mixer Tools** (14 methods): Volume, pan, mute, solo, rec-enable, batch operations
-- **Recording Control** (11 methods): Start/stop, punch recording, input monitoring, state queries
-- **Navigation Tools** (13 methods): Markers, loops, tempo, time signature, timecode navigation
+### Added
+
+#### Advanced Mixer Operations (15 methods)
+- **Send/Return Control**: Set send levels, enable/disable sends, list sends
+- **Plugin Management**: Set plugin parameters, activate/deactivate plugins, list plugins
+- **Bus Operations**: Create buses, route to buses, list bus sends
+- **Mixer Queries**: Get send count, query mixer state, extended mixer information
+
+#### Automation Control (13 methods)
+- **Automation Modes**: Set/get modes (off/play/write/touch/latch) per parameter
+- **Automation Recording**: Enable/disable automation write, record per parameter
+- **Automation Editing**: Clear automation, copy between tracks, check automation status
+- **Automation Playback**: Enable/disable playback, query automation state
+
+#### Metering & Monitoring (12 methods)
+- **Level Metering**: Track/master/bus level monitoring with peak detection
+- **Phase Analysis**: Phase correlation measurement, phase issue detection
+- **Loudness Metering**: LUFS estimation, integrated loudness, loudness range (LRA)
+- **Clipping Detection**: Real-time clipping alerts with headroom analysis
+- **Data Export**: Export metering data for analysis
+
+### Documentation
+- Complete usage guides for all Phase 3 features
+- `ADVANCED_MIXER_USAGE.md` with 5 workflow examples
+- `AUTOMATION_USAGE.md` with automation scenarios
+- `METERING_USAGE.md` with metering best practices
+- `COVERAGE_REPORT.md` documenting 86% test coverage
+
+### Testing
+- **581 total tests** (up from 293 in v0.2.0)
+- **86% overall coverage** (up from 67%)
+- 42 automation tests (98% coverage)
+- 40 metering tests (96% coverage)
+- 58 advanced mixer tests (100% coverage)
+- New integration tests and state management tests
+
+### Technical Improvements
+- Bidirectional OSC feedback for real-time metering
+- Async-safe caching with lock protection
+- Comprehensive error handling and validation
+- Production-ready state management
+
+---
+
+## [0.2.0] - 2025-11-06
+
+### Phase 2: Essential Features
+
+This release adds essential DAW functionality with **86 total tools** and comprehensive test coverage.
+
+### Added
+
+#### Mixer Tools (14 methods)
+- Volume, pan, mute, solo, record-enable controls
+- Track gain adjustment and reset
+- Batch operations for multiple tracks
+- Query mixer state
+
+#### Recording Control (13 methods)
+- Global recording start/stop
+- Punch recording with in/out points
+- Input monitoring modes (auto/input/disk)
+- Track arming and monitoring state queries
+- Recording session management
+
+#### Navigation Tools (17 methods)
+- Marker creation, deletion, navigation
+- Loop region control
+- Tempo and time signature changes
+- Timecode format conversion
+- Timeline scrubbing and positioning
+
+#### Advanced Mixer Operations (15 methods - preview)
+- Send/return level control
+- Plugin management
+- Bus operations
+- Extended mixer state queries
+
+### Documentation
+- Recording workflow examples
+- Mixer operations guide
+- Navigation and timeline control reference
+
+### Testing
+- **293 total tests** with 67% coverage
+- 61 recording tests (100% coverage)
+- Comprehensive integration tests
 
 ---
 
@@ -72,5 +147,7 @@ When released as v0.2.0:
 
 ---
 
-[Unreleased]: https://github.com/raibid-labs/ardour-mcp/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/raibid-labs/ardour-mcp/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/raibid-labs/ardour-mcp/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/raibid-labs/ardour-mcp/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/raibid-labs/ardour-mcp/releases/tag/v0.1.0
