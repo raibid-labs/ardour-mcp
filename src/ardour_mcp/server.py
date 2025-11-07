@@ -14,6 +14,7 @@ from mcp.server.stdio import stdio_server
 
 from ardour_mcp.ardour_state import ArdourState
 from ardour_mcp.osc_bridge import ArdourOSCBridge
+from ardour_mcp.tools.advanced_mixer import AdvancedMixerTools
 from ardour_mcp.tools.mixer import MixerTools
 from ardour_mcp.tools.navigation import NavigationTools
 from ardour_mcp.tools.recording import RecordingTools
@@ -53,6 +54,7 @@ class ArdourMCPServer:
         self.track_tools = TrackTools(self.osc_bridge, self.state)
         self.session_tools = SessionTools(self.osc_bridge, self.state)
         self.mixer_tools = MixerTools(self.osc_bridge, self.state)
+        self.advanced_mixer_tools = AdvancedMixerTools(self.osc_bridge, self.state)
         self.navigation_tools = NavigationTools(self.osc_bridge, self.state)
         self.recording_tools = RecordingTools(self.osc_bridge, self.state)
 
@@ -718,7 +720,185 @@ class ArdourMCPServer:
             result = await self.recording_tools.get_recording_state()
             return [result]
 
-        logger.info("Registered 71 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 17 navigation, 13 recording)")
+        # Advanced Mixer Control Tools - Send Configuration
+        @self.server.call_tool()
+        async def set_send_level(track_id: int, send_id: int, level_db: float) -> list[Any]:
+            """
+            Set send level in dB.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                send_id: Send ID (0-based)
+                level_db: Send gain in dB (range: -193.0 to +6.0)
+            """
+            result = await self.advanced_mixer_tools.set_send_level(track_id, send_id, level_db)
+            return [result]
+
+        @self.server.call_tool()
+        async def enable_send(track_id: int, send_id: int, enabled: bool) -> list[Any]:
+            """
+            Enable or disable a send.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                send_id: Send ID (0-based)
+                enabled: True to enable, False to disable
+            """
+            result = await self.advanced_mixer_tools.enable_send(track_id, send_id, enabled)
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_send(track_id: int, send_id: int) -> list[Any]:
+            """
+            Toggle send enabled state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                send_id: Send ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.toggle_send(track_id, send_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def list_sends(track_id: int) -> list[Any]:
+            """
+            List all sends for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.advanced_mixer_tools.list_sends(track_id)
+            return [result]
+
+        # Advanced Mixer Control Tools - Plugin Control
+        @self.server.call_tool()
+        async def set_plugin_parameter(track_id: int, plugin_id: int, param_id: int, value: float) -> list[Any]:
+            """
+            Set plugin parameter value.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                plugin_id: Plugin ID (0-based)
+                param_id: Parameter ID (0-based)
+                value: Parameter value (typically 0.0 to 1.0)
+            """
+            result = await self.advanced_mixer_tools.set_plugin_parameter(track_id, plugin_id, param_id, value)
+            return [result]
+
+        @self.server.call_tool()
+        async def activate_plugin(track_id: int, plugin_id: int) -> list[Any]:
+            """
+            Activate (enable) a plugin.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                plugin_id: Plugin ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.activate_plugin(track_id, plugin_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def deactivate_plugin(track_id: int, plugin_id: int) -> list[Any]:
+            """
+            Deactivate (bypass) a plugin.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                plugin_id: Plugin ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.deactivate_plugin(track_id, plugin_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def toggle_plugin(track_id: int, plugin_id: int) -> list[Any]:
+            """
+            Toggle plugin active state.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                plugin_id: Plugin ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.toggle_plugin(track_id, plugin_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_plugin_info(track_id: int, plugin_id: int) -> list[Any]:
+            """
+            Get plugin information.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                plugin_id: Plugin ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.get_plugin_info(track_id, plugin_id)
+            return [result]
+
+        # Advanced Mixer Control Tools - Bus Operations
+        @self.server.call_tool()
+        async def list_buses() -> list[Any]:
+            """List all buses in the session."""
+            result = await self.advanced_mixer_tools.list_buses()
+            return [result]
+
+        @self.server.call_tool()
+        async def get_bus_info(bus_id: int) -> list[Any]:
+            """
+            Get information about a specific bus.
+
+            Args:
+                bus_id: Bus strip ID (1-based)
+            """
+            result = await self.advanced_mixer_tools.get_bus_info(bus_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def list_bus_sends(bus_id: int) -> list[Any]:
+            """
+            List sends going to a specific bus.
+
+            Args:
+                bus_id: Bus strip ID (1-based)
+            """
+            result = await self.advanced_mixer_tools.list_bus_sends(bus_id)
+            return [result]
+
+        # Advanced Mixer Control Tools - Query Methods
+        @self.server.call_tool()
+        async def get_send_level(track_id: int, send_id: int) -> list[Any]:
+            """
+            Query send level from cache.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                send_id: Send ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.get_send_level(track_id, send_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_plugin_parameters(track_id: int, plugin_id: int) -> list[Any]:
+            """
+            List plugin parameters.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+                plugin_id: Plugin ID (0-based)
+            """
+            result = await self.advanced_mixer_tools.get_plugin_parameters(track_id, plugin_id)
+            return [result]
+
+        @self.server.call_tool()
+        async def get_track_sends_count(track_id: int) -> list[Any]:
+            """
+            Get count of sends for a track.
+
+            Args:
+                track_id: Track/strip ID (1-based)
+            """
+            result = await self.advanced_mixer_tools.get_track_sends_count(track_id)
+            return [result]
+
+        logger.info("Registered 86 MCP tools (11 transport, 5 track, 9 session, 14 mixer, 15 advanced mixer, 17 navigation, 13 recording)")
 
 
 async def serve() -> None:
