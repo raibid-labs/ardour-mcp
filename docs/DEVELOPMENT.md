@@ -91,17 +91,29 @@ LOG_LEVEL=DEBUG uv run ardour-mcp
 
 ```
 src/ardour_mcp/
-├── __init__.py           # Package initialization
-├── server.py             # Main MCP server
-├── osc_bridge.py         # OSC communication layer
-├── ardour_state.py       # State management
-└── tools/                # MCP tool implementations
-    ├── __init__.py       # Tool registration
-    ├── transport.py      # Transport controls
-    ├── tracks.py         # Track management
-    ├── session.py        # Session information
-    └── recording.py      # Recording controls
+├── __init__.py                    # Package initialization
+├── server.py                      # Main MCP server
+├── osc_bridge.py                  # OSC communication layer
+├── ardour_state.py                # State management
+└── tools/                         # MCP tool implementations
+    ├── __init__.py                # Tool registration
+    ├── transport.py               # Transport controls (13 methods)
+    ├── tracks.py                  # Track management (5 methods)
+    ├── session.py                 # Session information (9 methods)
+    ├── mixer.py                   # Mixer operations (14 methods)
+    ├── recording.py               # Recording controls (11 methods)
+    ├── navigation.py              # Navigation & markers (13 methods)
+    └── advanced_mixer.py          # Advanced mixing (14+ methods)
 ```
+
+**Tool Summary:**
+- **Transport**: Play, stop, pause, record, timeline navigation
+- **Tracks**: Create, select, rename, list audio/MIDI tracks
+- **Session**: Query tempo, sample rate, duration, buffer info
+- **Mixer**: Volume, pan, mute, solo, rec-enable, batch operations
+- **Recording**: Start/stop, punch recording, input monitoring
+- **Navigation**: Markers, loops, tempo/time signature, timecode jump
+- **Advanced Mixer**: Sends, plugins, buses (Phase 3)
 
 ### Adding a New Tool
 

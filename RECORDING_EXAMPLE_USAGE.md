@@ -565,4 +565,4 @@ Recording operations work closely with:
 - **Navigation Tools**: For positioning the playhead before recording
 - **Session Tools**: For saving sessions after recording
 
-See `MIXER_EXAMPLE_USAGE.md`, `TRANSPORT_EXAMPLE_USAGE.md`, and `NAVIGATION_EXAMPLE_USAGE.md` for more details.
+See `MIXER_EXAMPLE_USAGE.md`, `NAVIGATION_EXAMPLE_USAGE.md`, and `ADVANCED_MIXER_USAGE.md` for more details.

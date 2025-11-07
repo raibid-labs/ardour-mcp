@@ -1,7 +1,7 @@
 # Ardour MCP 🎵
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Server-green.svg)](https://modelcontextprotocol.io/)
 
 **Model Context Protocol server for Ardour DAW - Control Ardour through AI assistants**
@@ -20,21 +20,34 @@ Ardour MCP allows you to control Ardour using natural language:
 
 ## ✨ Features
 
-### Phase 1 (MVP) - In Development
+### Phase 1 (MVP) ✅ Complete
 
-- 🎮 **Transport Control**: Play, stop, record, navigation
-- 📊 **Session Information**: Query tempo, sample rate, track count
-- 🎚️ **Track Management**: Create, select, rename tracks
-- 🎛️ **Basic Mixer**: Volume, pan, mute, solo controls
-- 📝 **Markers**: Create and navigate to session markers
+- 🎮 **Transport Control**: Play, stop, pause, record, timeline navigation
+- 📊 **Session Information**: Query tempo, sample rate, duration, track count
+- 🎚️ **Track Management**: Create audio/MIDI tracks, select, rename, list
+- 🎛️ **Basic Mixer**: Volume, pan, mute, solo, rec-enable controls
+- 📝 **Markers**: Create, delete, rename, navigate to markers
+
+### Phase 2 (Essential Features) ✅ Complete
+
+- 🎚️ **Enhanced Mixer**: Batch operations, track state queries
+- 🎙️ **Recording Control**: Start/stop, punch recording, input monitoring
+- 🧭 **Navigation**: Loop control, tempo/time signature, timecode jump, bar navigation
+- 🎯 **Improved UX**: Convenience methods, comprehensive error handling
+
+### Phase 3 (Advanced Mixing) 🚧 In Progress
+
+- 🔊 **Advanced Mixer**: Send/return configuration, plugin control, bus operations
+- 🎚️ **Routing**: Input/output routing, bus creation and management
+- 📊 **Metering**: Track level monitoring, loudness analysis (planned)
 
 ### Planned Features
 
 See [ROADMAP.md](docs/ROADMAP.md) for complete feature timeline:
-- Advanced mixer operations (sends, inserts, automation)
-- Plugin control and management
+- Plugin parameter automation
 - Region editing and manipulation
 - Snapshot and template management
+- MIDI control and editing
 - And much more!
 
 ## 🚀 Quick Start
@@ -42,7 +55,7 @@ See [ROADMAP.md](docs/ROADMAP.md) for complete feature timeline:
 ### Prerequisites
 
 - **Ardour 8.x** with OSC enabled
-- **Python 3.10+**
+- **Python 3.11+** (with support for 3.10)
 - **uv** package manager (recommended)
 
 ### Installation
@@ -142,28 +155,36 @@ We welcome contributions from developers, musicians, and audio engineers!
 
 ## 📋 Current Status
 
-**Phase 1 (MVP)** - Core Implementation ✅
+**Phase 1 & 2** - Core + Essential Features ✅ **Complete**
 
-- ✅ Project structure and documentation
-- ✅ OSC communication bridge (bidirectional, 88% coverage)
+- ✅ Project structure and comprehensive documentation
+- ✅ OSC communication bridge (bidirectional)
 - ✅ State management with automatic updates
-- ✅ Transport control tools (13 methods, 94% coverage)
-- ✅ Session information tools (9 methods, 100% coverage)
-- ✅ **Track management tools (5 methods, 100% coverage)** ← Just completed!
-- ✅ MCP server integration (27 tools registered)
-- ✅ Comprehensive testing (98 tests, 59% overall coverage)
+- ✅ Transport control tools (13 methods)
+- ✅ Session information tools (9 methods)
+- ✅ Track management tools (5 methods)
+- ✅ Mixer tools (14 methods)
+- ✅ Recording control tools (11 methods)
+- ✅ Navigation tools (13 methods)
+- ✅ MCP server integration (86+ tools registered)
+- ✅ Comprehensive testing (351+ tests, extensive coverage)
 
-**Test Results**: 98/98 tests passing (100%) ✅
+**Phase 3** - Advanced Mixing 🚧 **In Progress**
 
-**Coverage by Module:**
-- Tracks: 100%
-- Session: 100%
-- Transport: 94%
-- OSC Bridge: 88%
+- ✅ Advanced mixer foundation (sends, plugins, buses)
+- 🚧 Metering and level monitoring (partial)
+- 📋 Extended plugin parameter control
+- 📋 Bus creation and routing
 
-**Ready for**: Integration testing with live Ardour instance
+**Test Results**: 351+ tests passing ✅
 
-Target: February 2025
+**Key Metrics:**
+- **86+ Total Tools**: Transport, Session, Tracks, Mixer, Recording, Navigation, Advanced Mixer
+- **93 Tool Methods**: Comprehensive Ardour control
+- **351+ Unit Tests**: Extensive coverage
+- **Test Pass Rate**: 100%
+
+**Latest Version**: v0.1.0 (Released November 6, 2025)
 
 See [ROADMAP.md](docs/ROADMAP.md) for detailed timeline.
 

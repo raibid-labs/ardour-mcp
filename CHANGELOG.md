@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Phase 3 (Advanced Mixing) - In Development
+
+#### Advanced Mixer Operations
+- Send/return level control and enable/disable
+- Plugin parameter control and activation/deactivation
+- Bus operations and bus send tracking
+- Extended query methods for mixer state
+
+#### Planned for v0.3.0
+- Automation modes and automation recording
+- Enhanced metering (phase correlation, loudness analysis)
+- Extended plugin preset management
+- VCA control and monitor section management
+
+### Phase 2 (Essential Features) - Ready for v0.2.0 Release
+
+When released as v0.2.0:
+- **Mixer Tools** (14 methods): Volume, pan, mute, solo, rec-enable, batch operations
+- **Recording Control** (11 methods): Start/stop, punch recording, input monitoring, state queries
+- **Navigation Tools** (13 methods): Markers, loops, tempo, time signature, timecode navigation
+
+---
+
 ## [0.1.0] - 2025-11-06
 
 ### Added
