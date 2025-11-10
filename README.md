@@ -24,6 +24,16 @@ Control Ardour using natural language through Claude Desktop or any MCP-compatib
 
 No commands to memorize - just describe what you want!
 
+## 🎹 MIDI Generation Integration
+
+**NEW**: Combine Ardour MCP with [MIDI MCP Server](https://github.com/tubone24/midi-mcp-server) for complete AI-assisted music production:
+
+- **"Generate a jazz piano backing track and import it into Ardour"**
+- **"Create a 4-bar drum pattern, bass line, and chord progression at 95 BPM"**
+- **"Make an orchestral arrangement with strings and brass, then mix it"**
+
+See [MIDI MCP Server Integration Guide](docs/integrations/MIDI_MCP_SERVER.md) for setup and [Complete Workflow Guide](docs/integrations/MIDI_ARDOUR_WORKFLOW.md) for examples.
+
 ## ✨ Current Status
 
 **Latest Release**: [v0.3.0](https://github.com/raibid-labs/ardour-mcp/releases/tag/v0.3.0) (January 7, 2025)
@@ -187,6 +197,15 @@ Complete usage guides for specific features:
 | **[Navigation Guide](docs/guides/NAVIGATION_EXAMPLE_USAGE.md)** | 17 tools | Markers, loops, tempo, timecode |
 | **[Automation Guide](docs/guides/AUTOMATION_USAGE.md)** | 13 tools | Automation modes, recording, editing |
 | **[Metering Guide](docs/guides/METERING_USAGE.md)** | 12 tools | Levels, phase analysis, loudness, clipping |
+
+### 🎹 Integration Guides
+
+Extend Ardour MCP with complementary MCP servers:
+
+| Guide | Description |
+|-------|-------------|
+| **[MIDI MCP Server](docs/integrations/MIDI_MCP_SERVER.md)** | Generate MIDI compositions from natural language |
+| **[Complete Workflow](docs/integrations/MIDI_ARDOUR_WORKFLOW.md)** | End-to-end music production with MIDI + Ardour |
 
 ### 🏗️ Technical Documentation
 
@@ -450,6 +469,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **[Ardour](https://ardour.org/)** - Professional open-source DAW
 - **[Anthropic](https://www.anthropic.com/)** - Model Context Protocol
 - **MCP Community** - Protocol specification and tooling
+- **[tubone24](https://github.com/tubone24)** - MIDI MCP Server integration
 - **Contributors** - Everyone who has contributed code, documentation, and feedback
 - **Testers** - Community members providing valuable feedback
 
