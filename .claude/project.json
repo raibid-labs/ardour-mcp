@@ -1,0 +1,201 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "github:raibid-labs/workspace/templates/repo-types/mcp-integration.json",
+
+  "project": {
+    "name": "ardour-mcp",
+    "type": "mcp-server",
+    "description": "Model Context Protocol server for Ardour DAW - Control Ardour through AI assistants. First MCP integration for a major open-source Digital Audio Workstation",
+    "repository": "https://github.com/raibid-labs/ardour-mcp"
+  },
+
+  "language": {
+    "primary": "python",
+    "secondary": ["markdown"]
+  },
+
+  "contextFiles": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "CLAUDE.md",
+    "CHANGELOG.md",
+    "pyproject.toml",
+    "pytest.ini",
+    "src/ardour_mcp/__init__.py",
+    "src/ardour_mcp/server.py",
+    "src/ardour_mcp/tools.py",
+    "src/ardour_mcp/state.py",
+    "src/ardour_mcp/osc_bridge.py",
+    "tests/**/*.py",
+    "docs/QUICK_START.md",
+    "docs/ARCHITECTURE.md",
+    "docs/ROADMAP.md",
+    "docs/OSC_API.md"
+  ],
+
+  "specialization": {
+    "domain": "MCP Server Development",
+    "integration": "Ardour Digital Audio Workstation",
+    "protocol": "OSC (Open Sound Control) over UDP",
+    "capabilities": [
+      "Transport control (play, stop, record)",
+      "Track management (create, rename, select)",
+      "Session management (tempo, time signature)",
+      "Mixer (volume, pan, mute, solo)",
+      "Advanced mixer (sends, plugins, routing)",
+      "Navigation (markers, loops, timecode)",
+      "Recording (punch in/out, monitoring)",
+      "Automation (modes, recording, editing)",
+      "Metering (levels, phase, loudness, clipping)"
+    ],
+    "tools": 111,
+    "testCoverage": "86%"
+  },
+
+  "architecture": {
+    "pattern": "Three-layer MCP architecture",
+    "layers": [
+      "MCP Server - 111 registered tools",
+      "State Manager - Cached state with auto-updates",
+      "OSC Bridge - Bidirectional communication"
+    ],
+    "communication": "Bidirectional OSC protocol over UDP",
+    "features": [
+      "State caching for fast queries",
+      "Automatic state synchronization",
+      "Comprehensive error handling",
+      "Real-time feedback"
+    ]
+  },
+
+  "documentation": {
+    "primary": [
+      "README.md - Main documentation and setup",
+      "CONTRIBUTING.md - Development guidelines",
+      "CLAUDE.md - Claude-specific context",
+      "CHANGELOG.md - Version history"
+    ],
+    "quickStart": [
+      "docs/QUICK_START.md - 5-minute setup guide",
+      "docs/EXAMPLE_CONVERSATIONS.md - Real dialogue examples",
+      "docs/USAGE_EXAMPLES.md - Feature reference"
+    ],
+    "guides": [
+      "docs/guides/RECORDING_EXAMPLE_USAGE.md - Recording guide",
+      "docs/guides/MIXER_EXAMPLE_USAGE.md - Mixer guide",
+      "docs/guides/ADVANCED_MIXER_USAGE.md - Advanced mixer",
+      "docs/guides/NAVIGATION_EXAMPLE_USAGE.md - Navigation",
+      "docs/guides/AUTOMATION_USAGE.md - Automation",
+      "docs/guides/METERING_USAGE.md - Metering"
+    ],
+    "integrations": [
+      "docs/integrations/MIDI_MCP_SERVER.md - MIDI integration",
+      "docs/integrations/MIDI_ARDOUR_WORKFLOW.md - Complete workflow"
+    ],
+    "technical": [
+      "docs/ARCHITECTURE.md - System design",
+      "docs/DEVELOPMENT.md - Development setup",
+      "docs/OSC_API.md - OSC command reference",
+      "docs/COVERAGE_REPORT.md - Test coverage analysis"
+    ],
+    "project": [
+      "docs/ROADMAP.md - Feature timeline",
+      "docs/RELEASING.md - Release process",
+      "docs/RELEASE-WORKFLOWS.md - Automation options",
+      "docs/REGISTRY_PUBLISHING.md - Publishing guide"
+    ]
+  },
+
+  "testing": {
+    "framework": "pytest",
+    "totalTests": 581,
+    "coverage": "86%",
+    "coverageByModule": {
+      "automation": "98%",
+      "metering": "96%",
+      "advancedMixer": "100%",
+      "stateManagement": "100%"
+    },
+    "types": [
+      "Unit tests",
+      "Integration tests",
+      "OSC communication tests",
+      "State synchronization tests"
+    ]
+  },
+
+  "releases": {
+    "latest": "v0.3.0",
+    "releaseDate": "2025-01-07",
+    "status": "Production-ready",
+    "phases": {
+      "phase1": "✅ MVP (27 tools)",
+      "phase2": "✅ Essential Features (86 tools)",
+      "phase3": "✅ Advanced Mixing (111 tools)",
+      "phase4": "📋 Production (planned Q1 2025)",
+      "phase5": "📋 Advanced Features (planned Q2 2025)"
+    }
+  },
+
+  "additionalRules": [
+    "This is an MCP server - follow MCP Python SDK conventions",
+    "All tools must have comprehensive docstrings",
+    "Use async/await for all I/O operations",
+    "Implement proper error handling with descriptive messages",
+    "Validate all inputs with Pydantic models",
+    "Test coverage must remain above 85%",
+    "OSC communication is bidirectional - handle feedback",
+    "State caching is critical for performance",
+    "Document all 111 tools with usage examples",
+    "Integration with MIDI MCP Server for complete workflows"
+  ],
+
+  "workflows": {
+    "setup": [
+      "uv sync --all-extras - Install dependencies",
+      "Configure Ardour OSC (port 3819, enable feedback)",
+      "Add to Claude Desktop or Claude Code config"
+    ],
+    "development": [
+      "uv run pytest - Run test suite",
+      "uv run pytest --cov=src/ardour_mcp - Coverage report",
+      "uv run ruff check . - Lint code",
+      "uv run mypy src/ - Type check"
+    ],
+    "testing": [
+      "pytest tests/ -v - Verbose test output",
+      "pytest tests/test_automation.py - Specific module",
+      "pytest --cov-report=html - HTML coverage report"
+    ],
+    "release": [
+      "just release-status - Check release status",
+      "just release-auto-patch - Create patch release",
+      "just release-auto-minor - Create minor release"
+    ]
+  },
+
+  "mcpConfiguration": {
+    "serverName": "ardour",
+    "packageName": "ardour-mcp",
+    "entryPoint": "ardour-mcp",
+    "installation": {
+      "claudeCode": "claude mcp add --transport stdio ardour --scope user -- uv --directory /path/to/ardour-mcp run ardour-mcp",
+      "claudeDesktop": "Add to claude_desktop_config.json"
+    },
+    "ardourSetup": {
+      "oscPort": 3819,
+      "feedback": "Enable all feedback options",
+      "location": "Edit → Preferences → Control Surfaces"
+    }
+  },
+
+  "additionalIntegrations": [
+    {
+      "name": "MIDI MCP Server",
+      "url": "https://github.com/tubone24/midi-mcp-server",
+      "purpose": "Generate MIDI compositions from natural language",
+      "workflow": "MIDI generation → Import to Ardour → Mix and master"
+    }
+  ]
+}
