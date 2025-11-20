@@ -1,10 +1,12 @@
 # Ardour MCP 🎵
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-Server-green.svg)](https://modelcontextprotocol.io/)
 [![Tests](https://img.shields.io/badge/tests-581%20passing-brightgreen.svg)](https://github.com/raibid-labs/ardour-mcp/actions)
 [![Coverage](https://img.shields.io/badge/coverage-86%25-yellowgreen.svg)](docs/COVERAGE_REPORT.md)
+[![Code of Conduct](https://img.shields.io/badge/Code%20of%20Conduct-Contributor%20Covenant-purple.svg)](CODE_OF_CONDUCT.md)
+[![Security](https://img.shields.io/badge/Security-Policy-red.svg)](SECURITY.md)
 
 **Model Context Protocol server for Ardour DAW - Control Ardour through AI assistants**
 
@@ -36,7 +38,7 @@ See [MIDI MCP Server Integration Guide](docs/integrations/MIDI_MCP_SERVER.md) fo
 
 ## ✨ Current Status
 
-**Latest Release**: [v0.3.0](https://github.com/raibid-labs/ardour-mcp/releases/tag/v0.3.0) (January 7, 2025)
+**Latest Release**: [v0.3.0](https://github.com/raibid-labs/ardour-mcp/releases/tag/v0.3.0) (January 2025)
 
 ### 🎉 Phase 3 Complete - Professional Mixing & Mastering
 
@@ -75,7 +77,7 @@ See [ROADMAP.md](docs/ROADMAP.md) for complete feature timeline.
 ### Prerequisites
 
 - **Ardour 8.x or 9.x** installed
-- **Python 3.11+** (Python 3.10 also supported)
+- **Python 3.10+** (Python 3.10, 3.11, 3.12 supported)
 - **Claude Desktop or Claude Code** (or any MCP-compatible client)
 
 ### Installation
@@ -226,8 +228,10 @@ Releases, roadmap, and publishing:
 |----------|-------------|
 | **[Roadmap](docs/ROADMAP.md)** | Feature timeline and milestones |
 | **[Releasing](docs/RELEASING.md)** | Version management and release process |
+| **[Pre-Release Checklist](docs/PRE_RELEASE_CHECKLIST.md)** | Comprehensive checklist before releasing |
 | **[Release Workflows](docs/RELEASE-WORKFLOWS.md)** | Comparison of automation options |
-| **[Registry Publishing](docs/REGISTRY_PUBLISHING.md)** | Publishing to MCP registries (PyPI, etc.) |
+| **[PyPI Setup](docs/PYPI_SETUP.md)** | Configure PyPI trusted publishing |
+| **[Registry Publishing](docs/REGISTRY_PUBLISHING.md)** | Publishing to MCP registries |
 
 ### 🤝 Contributing
 

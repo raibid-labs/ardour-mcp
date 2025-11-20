@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/raibid-labs/ardour-mcp/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: Security Vulnerability
+    url: https://github.com/raibid-labs/ardour-mcp/security/policy
+    about: Report security vulnerabilities privately
+  - name: Documentation
+    url: https://github.com/raibid-labs/ardour-mcp/blob/main/README.md
+    about: Read the documentation and guides
+  - name: Ardour Support
+    url: https://discourse.ardour.org/
+    about: For questions about Ardour itself (not MCP integration)

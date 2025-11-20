@@ -4,9 +4,9 @@ Thank you for your interest in contributing to Ardour MCP! This project aims to 
 
 ## Code of Conduct
 
-This project adheres to a code of conduct that all contributors are expected to follow. Please be respectful, inclusive, and constructive in all interactions.
+This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@raibid-labs.com.
 
-### Our Standards
+### Quick Guidelines
 
 - **Be respectful**: Treat everyone with respect and consideration
 - **Be inclusive**: Welcome newcomers and diverse perspectives
@@ -14,25 +14,41 @@ This project adheres to a code of conduct that all contributors are expected to 
 - **Be professional**: Keep discussions focused on the project
 - **Be patient**: Remember that everyone is learning
 
+Read the full [Code of Conduct](CODE_OF_CONDUCT.md) for details.
+
 ## How to Contribute
 
 ### Reporting Bugs
 
-If you find a bug, please create an issue with:
+If you find a bug, please [create a bug report](https://github.com/raibid-labs/ardour-mcp/issues/new?template=bug_report.yml) using our issue template.
+
+The template will guide you through providing:
 - Clear, descriptive title
 - Steps to reproduce
-- Expected behavior
-- Actual behavior
+- Expected vs actual behavior
 - Environment details (OS, Python version, Ardour version)
 - Relevant logs or error messages
 
+**Important**: Before creating a new issue:
+- Search existing issues to avoid duplicates
+- Ensure you're using a supported version (Ardour 8.x or 9.x)
+- Verify OSC is enabled in Ardour with feedback turned on
+
 ### Suggesting Features
 
-Feature suggestions are welcome! Please:
-- Check existing issues to avoid duplicates
-- Provide clear use cases
-- Explain how it benefits users
-- Consider implementation complexity
+Feature suggestions are welcome! Please [create a feature request](https://github.com/raibid-labs/ardour-mcp/issues/new?template=feature_request.yml) using our template.
+
+The template helps you provide:
+- Problem statement and use cases
+- Proposed solution
+- Feature category (transport, mixer, etc.)
+- Priority and willingness to contribute
+
+### Security Vulnerabilities
+
+**Do NOT report security vulnerabilities through public issues.**
+
+Instead, please follow our [Security Policy](SECURITY.md) and report them privately to security@raibid-labs.com.
 
 ### Contributing Code
 
@@ -43,9 +59,15 @@ Feature suggestions are welcome! Please:
 5. **Run tests**: `uv run pytest`
 6. **Format code**: `uv run ruff format src/ tests/`
 7. **Lint code**: `uv run ruff check src/ tests/`
-8. **Commit changes**: Use clear, descriptive commit messages
+8. **Commit changes**: Use clear, descriptive commit messages (see below)
 9. **Push to your fork**: `git push origin feature/your-feature-name`
-10. **Create pull request**: Describe your changes thoroughly
+10. **Create pull request**: Use our [PR template](.github/PULL_REQUEST_TEMPLATE.md) which will auto-populate
+
+The pull request template will guide you through:
+- Describing your changes
+- Type of change (bug fix, feature, etc.)
+- Testing performed
+- Checklist of requirements
 
 ### Development Setup
 

@@ -1,0 +1,149 @@
+name: Bug Report
+description: File a bug report to help us improve
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Configure MCP client with...
+        2. Send request to...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: I expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Instead...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ardour-version
+    attributes:
+      label: Ardour Version
+      description: Which version of Ardour are you using?
+      options:
+        - "9.0"
+        - "8.10"
+        - "8.9"
+        - "8.8"
+        - "Other (specify in Additional Context)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: python-version
+    attributes:
+      label: Python Version
+      description: Which version of Python are you using?
+      options:
+        - "3.12"
+        - "3.11"
+        - "3.10"
+        - "Other (specify in Additional Context)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mcp-client
+    attributes:
+      label: MCP Client
+      description: Which MCP client are you using?
+      options:
+        - "Claude Desktop"
+        - "Claude Code"
+        - "Other (specify in Additional Context)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - "Ubuntu/Debian"
+        - "macOS"
+        - "Windows"
+        - "Other Linux (specify in Additional Context)"
+    validations:
+      required: true
+
+  - type: input
+    id: ardour-mcp-version
+    attributes:
+      label: Ardour MCP Version
+      description: "Which version of ardour-mcp? (run: `uv run python -c 'import ardour_mcp; print(ardour_mcp.__version__)'`)"
+      placeholder: "e.g., 0.3.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Please copy and paste any relevant log output
+      render: shell
+
+  - type: textarea
+    id: osc-config
+    attributes:
+      label: Ardour OSC Configuration
+      description: |
+        Share your Ardour OSC configuration (Edit → Preferences → Control Surfaces → OSC)
+      placeholder: |
+        Port: 3819
+        Feedback: All enabled
+        etc.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Screenshots, error messages, etc.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have included all relevant information above
+          required: true
+        - label: I am using a supported version of Ardour (8.x or 9.x)
+          required: true
+        - label: I have OSC enabled in Ardour with feedback turned on
+          required: true

@@ -1,0 +1,132 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please provide as much detail as possible.
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Feature Category
+      description: Which category does this feature belong to?
+      options:
+        - "Transport Control"
+        - "Track Management"
+        - "Session Management"
+        - "Mixer (Basic)"
+        - "Mixer (Advanced)"
+        - "Navigation"
+        - "Recording"
+        - "Automation"
+        - "Metering"
+        - "Plugin Control"
+        - "Region/Clip Editing"
+        - "MIDI"
+        - "Integration with other tools"
+        - "Documentation"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? What workflow is currently difficult or impossible?
+      placeholder: |
+        As a music producer, I find it difficult to...
+        Currently, I have to manually...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this feature to work?
+      placeholder: |
+        I would like to be able to say "..." and have Ardour...
+        The AI assistant should be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternative solutions or workarounds have you considered?
+      placeholder: |
+        Currently I work around this by...
+        Another approach could be...
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: Provide specific examples of how you would use this feature
+      placeholder: |
+        Example 1: When mixing a podcast, I would...
+        Example 2: During a recording session, I would...
+    validations:
+      required: true
+
+  - type: textarea
+    id: ardour-capabilities
+    attributes:
+      label: Ardour Capabilities
+      description: |
+        If you know whether Ardour supports this via OSC or its UI, please share.
+        This helps us understand if it's an Ardour limitation or MCP integration gap.
+      placeholder: |
+        This is possible in Ardour UI via...
+        Ardour's OSC API supports...
+        I'm not sure if Ardour supports this...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (from your perspective)
+      description: How important is this feature to your workflow?
+      options:
+        - "Critical - Can't use ardour-mcp without this"
+        - "High - Would significantly improve my workflow"
+        - "Medium - Nice to have"
+        - "Low - Minor convenience"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Willing to Contribute
+      description: Would you be willing to help implement this feature?
+      options:
+        - "Yes - I can submit a PR"
+        - "Maybe - I need guidance"
+        - "No - I can only provide feedback/testing"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or examples
+      placeholder: Links to similar features in other tools, screenshots, etc.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm
+      options:
+        - label: I have searched existing issues and feature requests
+          required: true
+        - label: This feature aligns with Ardour MCP's goal of natural language DAW control
+          required: true
+        - label: I have provided specific use cases
+          required: true
