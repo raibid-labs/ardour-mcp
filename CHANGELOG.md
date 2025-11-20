@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0](https://github.com/raibid-labs/ardour-mcp/compare/v0.3.0...v0.4.0) (2025-11-20)
+
+
+### Features
+
+* add Claude organization configuration ([54bc9c3](https://github.com/raibid-labs/ardour-mcp/commit/54bc9c392c108435f5e78457b84e3e07c3ed89d9))
+* **music-gen:** Add complete MIDI generation and AI music pipeline ([e9809eb](https://github.com/raibid-labs/ardour-mcp/commit/e9809eb053cb791b8cf7b87c3db7a905dfce64f0))
+
+
+### Documentation
+
+* add Claude Code setup instructions ([29d60e5](https://github.com/raibid-labs/ardour-mcp/commit/29d60e58a35ac74f1cdbc6d010b21603775f41c8))
+* add comprehensive getting started guides and examples ([cd2630b](https://github.com/raibid-labs/ardour-mcp/commit/cd2630ba4c17c349f03782996ead5f957f196dbc))
+* add comprehensive MCP registry publishing guide ([36d1827](https://github.com/raibid-labs/ardour-mcp/commit/36d1827ded119fdc03a1d0dfe4b67bbc2289c065))
+* reorganize markdown files and rewrite README with comprehensive TOC ([6517864](https://github.com/raibid-labs/ardour-mcp/commit/6517864cf3759a551013e8b2e717caf933bca1cd))
+
 ## [Unreleased]
 
 ---
